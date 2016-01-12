@@ -2,8 +2,8 @@ var poller = spredfast.Poller;
 
 (function getResults() {
 	$.when(
-			poller.poll({type: 'veggies', limit: 100}),
-			poller.poll({type: 'fruits', limit: 100})
+			poller.poll({type: 'veggies', limit: 10}),
+			poller.poll({type: 'fruits', limit: 10})
 		)
 		.done(function(veggies, fruits) {
 			veggies
