@@ -64,11 +64,11 @@
     var dfd = $.Deferred();
 
     setTimeout(function () {
-      var payload = self._processData(self._getData(config.type), config.limit);
+      var payload = this._processData(this._getData(config.type), config.limit);
 
       cb && cb(payload);      
       dfd.resolve(payload);
-    }, this._getRandomNumber(400, 2000));
+    }.bind(this), this._getRandomNumber(400, 2000));
 
     return dfd;
   };
