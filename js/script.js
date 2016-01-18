@@ -15,13 +15,13 @@
 
 	function getCategory(category, limit) {
 	    return Observable.create(function forEach(observer) {
-	        poller.poll({type: category, limit:limit}).
-	      then(function(data) {
-	            observer.onNext(data);
-	            observer.onCompleted();
-	        }).
-	        fail(function (err) {
-	            observer.onError(err);
+	        poller.poll({type: category, limit:limit})
+		      .then(function(data) {
+            observer.onNext(data);
+            observer.onCompleted();
+	        })
+	        .fail(function (err) {
+            observer.onError(err);
 	        })
 	    });
 	}
