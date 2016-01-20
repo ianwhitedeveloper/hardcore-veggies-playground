@@ -1,7 +1,11 @@
 $(document).ready(function() {
 	(function() {
 		var poller = new spredfast.Poller(),
-				EVT = new EventEmitter2();
+				EVT = new EventEmitter2(),
+				template = document.getElementById('template').innerHTML,
+				leaderboardListElement = $('[rel="js_produce_leaderboard_list"]');
+
+		Mustache.parse(template);
 
 		function returnLargestByCount(a,b) {
 		  if (a.count < b.count) {
@@ -20,16 +24,20 @@ $(document).ready(function() {
 					poller.poll({type: 'fruits', limit: 10})
 				)
 				.done(function(veggies, fruits) {
-					veggies
-					.concat(fruits)
-					.sort(returnLargestByCount)
-					.slice(0, 5)
-					.forEach(function(el) {
-						console.log(el.name + ' ' + el.count);
-					})
+					var data = { 'items' : veggies
+						.concat(fruits)
+						.sort(returnLargestByCount)
+						.slice(0, 5)
+						.map(function(el) {
+							console.log(el.name + ' ' + el.count);
+							return {"name": el.name, "count": el.count};
+						})
+					};
+
+					leaderboardListElement.html(Mustache.render(template, data));
 				})
 				.fail(function() {
-					console.warn('uh oh');
+					leaderboardListElement.empty().html('<h1>Error - please try again later</h1>');
 				});
 			
 			// setTimeout(getResults, 15000);
