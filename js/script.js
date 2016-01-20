@@ -62,11 +62,30 @@ $(document).ready(function() {
 			console.log('completed');
 		}
 
-		////////////////
-		// Solution 1 //
-		////////////////
+		////////////////////////////
+		// Solution 1 (preferred) //
+		////////////////////////////
 		
-		var source1 = Observable.fromPromise(poller.poll({type: 'fruits', limit:10}));
+		(function getResults() {
+			Observable.
+				zip(
+					getCategory('fruits' ,10), 
+					getCategory('veggies' ,10), 
+					(fruits,veggies) => 
+						fruits.concat(veggies)
+						.sort(returnLargestByCount)
+						.slice(0,5)
+				)
+				.subscribe(onNext, onError, onCompleted);
+
+			// setTimeout(getResults, 15000);
+		})();
+		
+		
+		////////////////
+		// Solution 2 //
+		////////////////
+		/*var source1 = Observable.fromPromise(poller.poll({type: 'fruits', limit:10}));
 		var source2 = Observable.fromPromise(poller.poll({type: 'veggies', limit:10}));
 
 		(function getResults() {
@@ -86,27 +105,8 @@ $(document).ready(function() {
 
 
 			// setTimeout(getResults, 15000);
-		})();
+		})();*/
 		
-		////////////////
-		// Solution 2 //
-		////////////////
-		/*
-		(function getResults() {
-			Observable.
-				zip(
-					getCategory('fruits' ,10), 
-					getCategory('veggies' ,10), 
-					(fruits,veggies) => 
-						fruits.concat(veggies)
-						.sort(returnLargestByCount)
-						.slice(0,5)
-				)
-				.subscribe(onNext, onError, onCompleted);
-
-			// setTimeout(getResults, 15000);
-		})();
-		*/
 
 		////////////////
 		// Solution 3 //
