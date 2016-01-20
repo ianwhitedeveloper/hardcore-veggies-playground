@@ -7,6 +7,9 @@ $(document).ready(function() {
 
 		Mustache.parse(template);
 
+		EVT.on('renderItemsToLeaderboard', renderItemsToLeaderboard);
+		EVT.on('retrieveResultsFailure', retrieveResultsFailure);
+
 		function returnLargestByCount(a,b) {
 		  if (a.count < b.count) {
 		    return 1;
@@ -22,25 +25,34 @@ $(document).ready(function() {
 			return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 		}
 
+		function renderItemsToLeaderboard(items) {
+			var data = { 'items' : items};
+			leaderboardListElement.html(Mustache.render(template, data));
+		}
+
+		function retrieveResultsFailure(err) {
+			console.error(err);
+		}
+
 		(function getResults() {
 			$.when(
 					poller.poll({type: 'veggies', limit: 10}),
 					poller.poll({type: 'fruits', limit: 10})
 				)
 				.done(function(veggies, fruits) {
-					var data = { 'items' : veggies
+					var items = 
+						veggies
 						.concat(fruits)
 						.sort(returnLargestByCount)
 						.slice(0, 5)
 						.map(function(el) {
 							return {"name": el.name, "count": formatNumber(el.count)};
-						})
-					};
+						});
 
-					leaderboardListElement.html(Mustache.render(template, data));
+					EVT.emit('renderItemsToLeaderboard', items);
 				})
-				.fail(function() {
-					leaderboardListElement.empty().html('<h1>Error - please try again later</h1>');
+				.fail(function(err) {
+					EVT.emit('retrieveResultsFailure', err);
 				});
 			
 			// setTimeout(getResults, 15000);
