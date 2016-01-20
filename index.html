@@ -16,12 +16,44 @@
   </head>
   <body>
 
+  <div class="layout_constrained">
+    <main class="leaderboard">
+      <h1 class="leaderboard_header">Hardcore Produce</h1>
 
+      <div class="leaderboard_display">
+        
+        <ul class="leaderboard_list" rel="js_produce_leaderboard_list">
+          <!-- injected via js  -->
+          <!-- <li class="leaderboard__listItem" rel="leaderboard__listItem_isActive etc">
+            <h2>Parsnips</h2>
+
+            <h3>1,329</h3>
+            <h4>Mentions</h4>
+          </li> -->
+        </ul>
+
+      </div>
+
+    </main>
+  </div>
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.js"></script>
+    <script src="js/eventemitter2.js"></script>
     <script src="./js/api.js"></script>
     <script src="./js/script.js"></script>
+
+    <script id="template" type="x-tmpl-mustache">
+      {{#items}}
+      <li class="leaderboard__listItem" rel="leaderboard__listItem_isActive">
+        <h2>{{name}}</h2>
+
+        <h3>{{count}}</h3>
+        <h4>Mentions</h4>
+      </li>
+      {{/items}}
+    </script>
 
   </body>
 </html>
