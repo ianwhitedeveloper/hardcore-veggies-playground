@@ -18,6 +18,10 @@ $(document).ready(function() {
 		  return 0;
 		}
 
+		function formatNumber(num) {
+			return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+		}
+
 		(function getResults() {
 			$.when(
 					poller.poll({type: 'veggies', limit: 10}),
@@ -29,8 +33,7 @@ $(document).ready(function() {
 						.sort(returnLargestByCount)
 						.slice(0, 5)
 						.map(function(el) {
-							console.log(el.name + ' ' + el.count);
-							return {"name": el.name, "count": el.count};
+							return {"name": el.name, "count": formatNumber(el.count)};
 						})
 					};
 
