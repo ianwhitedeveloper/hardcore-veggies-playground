@@ -65,8 +65,26 @@ $(document).ready(function() {
 		////////////////////////////
 		// Solution 1 (preferred) //
 		////////////////////////////
+
+		var array = ['fruits', 'veggies'];
+
+		var source = Rx.Observable.from(array).concatMap(httpGet).
+				reduce(function (acc, curr) {
+					return acc.concat(curr)
+										.sort(returnLargestByCount)
+										.slice(0,5);
+				})
+				.subscribe(onNext, onError, onCompleted);
+
+		function httpGet(category) {
+		  return poller.poll({type: category})
+	  }
+
+		////////////////
+		// Solution 2 //
+		////////////////
 		
-		(function getResults() {
+		/*(function getResults() {
 			Observable.
 				zip(
 					getCategory('fruits' ,10), 
@@ -79,11 +97,11 @@ $(document).ready(function() {
 				.subscribe(onNext, onError, onCompleted);
 
 			// setTimeout(getResults, 15000);
-		})();
+		})();*/
 		
 		
 		////////////////
-		// Solution 2 //
+		// Solution 3 //
 		////////////////
 		/*var source1 = Observable.fromPromise(poller.poll({type: 'fruits', limit:10}));
 		var source2 = Observable.fromPromise(poller.poll({type: 'veggies', limit:10}));
@@ -109,7 +127,7 @@ $(document).ready(function() {
 		
 
 		////////////////
-		// Solution 3 //
+		// Solution 4 //
 		////////////////
 		/*
 		(function getResults() {
