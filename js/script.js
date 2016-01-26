@@ -69,7 +69,7 @@ $(document).ready(function() {
 		var categories = ['fruits', 'veggies'];
 
 		var source = 
-			Rx.Observable
+			Observable
 				.from(categories)
 				.concatMap(httpGet)
 				.reduce(
