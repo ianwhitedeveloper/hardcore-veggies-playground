@@ -66,18 +66,23 @@ $(document).ready(function() {
 		// Solution 1 (preferred) //
 		////////////////////////////
 
-		var array = ['fruits', 'veggies'];
+		var categories = ['fruits', 'veggies'];
 
-		var source = Rx.Observable.from(array).concatMap(httpGet).
-				reduce(function (acc, curr) {
-					return acc.concat(curr)
-										.sort(returnLargestByCount)
-										.slice(0,5);
-				})
+		var source = 
+			Rx.Observable
+				.from(categories)
+				.concatMap(httpGet)
+				.reduce(
+					function (acc, curr) {
+						return acc.concat(curr)
+											.sort(returnLargestByCount)
+											.slice(0,5);
+					}
+				)
 				.subscribe(onNext, onError, onCompleted);
 
 		function httpGet(category) {
-		  return poller.poll({type: category})
+		  return poller.poll({type: category});
 	  }
 
 		////////////////
