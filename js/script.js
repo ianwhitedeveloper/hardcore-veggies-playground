@@ -68,17 +68,17 @@ $(document).ready(function() {
 
 		var categories = ['fruits', 'veggies'];
 
+		function returnTopFive(acc, curr) {
+			return acc.concat(curr)
+								.sort(returnLargestByCount)
+								.slice(0,5);
+		}
+
 		var source = 
 			Observable
 				.from(categories)
 				.concatMap(httpGet)
-				.reduce(
-					function (acc, curr) {
-						return acc.concat(curr)
-											.sort(returnLargestByCount)
-											.slice(0,5);
-					}
-				)
+				.reduce(returnTopFive)
 				.subscribe(onNext, onError, onCompleted);
 
 		function httpGet(category) {
