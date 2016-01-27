@@ -59,9 +59,25 @@ require([
 			});
 		};
 
-		Task.of(_.concat)
+		/*Task.of(_.concat)
 			.ap(httpRequest({type: 'veggies', limit: 10}))
 			.ap(httpRequest({type: 'fruits', limit: 10}))
+			.fork(console.log.bind(console), console.log.bind(console));*/
+
+			var liftA2 = _.curry(function(f, functor1, functor2) {
+			  return functor1.map(f).ap(functor2);
+			});
+
+			var liftA3 = _.curry(function(f, functor1, functor2, functor3) {
+			  return functor1.map(f).ap(functor2).ap(functor3);
+			});
+
+			
+			liftA2(
+				_.concat, 
+				httpRequest({type: 'veggies', limit: 10}), 
+				httpRequest({type: 'fruits', limit: 10})
+			)
 			.fork(console.log.bind(console), console.log.bind(console));
 
 		/*(function getResults() {
