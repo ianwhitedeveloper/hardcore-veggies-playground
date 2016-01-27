@@ -50,7 +50,7 @@ require([
 		  
 		  return 0;
 		});
-		
+
 		var countLens = _.lensProp('count');
 
 		var formatNumber = _.compose(_.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"), _.toString);
@@ -67,22 +67,22 @@ require([
 		// Pure //
 		//////////
 
+		////////////
+		// Impure //
+		////////////
+		var renderItemsToLeaderboard = _.curry((data) => {
+			leaderboardListElement.html(Mustache.render(template, { 'items' : data}));
+		});
+
 		var success = 
 			_.compose(
-				_.map(console.log.bind(console)), 
+				renderItemsToLeaderboard, 
 				_.map(
 					_.over(countLens, formatNumber)
 				), 
 				_.slice(0,5),
 				_.sort(returnLargestByCount)
 			);
-
-		////////////
-		// Impure //
-		////////////
-		var renderItemsToLeaderboard = _.curry((el, template, data) => {
-			el.html(Mustache.render(template, { 'items' : data}));
-		});
 
 		var httpRequest = function (config) {
 			return new Task((reject, result) => {
