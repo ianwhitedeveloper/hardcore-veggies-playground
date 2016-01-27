@@ -4,7 +4,6 @@ requirejs.config({
     Task: './js/data.task.umd',
     jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min',
     mustache: 'https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache',
-    EventEmitter2: 'js/eventemitter2',
     spredfast: './js/api'
   }
 });
@@ -14,13 +13,11 @@ require([
     'Task',
     'jquery',
     'mustache',
-    'EventEmitter2',
     'spredfast'
   ],
-  function (_, Task, $, Mustache, EventEmitter2, spredfast) {
+  function (_, Task, $, Mustache, spredfast) {
   	
 		var poller = new spredfast.Poller(),
-				EVT = new EventEmitter2(),
 				template = document.getElementById('template').innerHTML,
 				leaderboardListElement = $('[rel="js_produce_leaderboard_list"]');
 
@@ -54,9 +51,6 @@ require([
 		function retrieveResultsFailure(err) {
 			console.error(err);
 		}
-
-		// EVT.on('renderItemsToLeaderboard', renderItemsToLeaderboard);
-		// EVT.on('retrieveResultsFailure', retrieveResultsFailure);
 
 		//////////
 		// Pure //
