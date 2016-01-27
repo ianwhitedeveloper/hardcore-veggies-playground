@@ -94,7 +94,7 @@ require([
 		 Task.of(_.concat)
 			.ap(httpRequest({type: 'veggies', limit: 10}))
 			.ap(httpRequest({type: 'fruits', limit: 10}))
-			.fork(console.log.bind(console), console.log.bind(console));
+			.fork(retrieveResultsFailure, success);
 		*/
 	
 		liftA2(
