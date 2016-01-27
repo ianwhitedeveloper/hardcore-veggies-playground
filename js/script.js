@@ -1,6 +1,6 @@
 requirejs.config({
   paths: {
-    ramda: 'https://cdnjs.cloudflare.com/ajax/libs/ramda/0.13.0/ramda.min',
+    ramda: 'https://cdnjs.cloudflare.com/ajax/libs/ramda/0.16.0/ramda.min',
     Task: './js/data.task.umd',
     jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min',
     mustache: 'https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache',
@@ -26,8 +26,19 @@ require([
 
 		Mustache.parse(template);
 
-		// EVT.on('renderItemsToLeaderboard', renderItemsToLeaderboard);
-		// EVT.on('retrieveResultsFailure', retrieveResultsFailure);
+		///////////////////////////////////////////////////////////////////////////
+		// Resource used to learn                                                //
+		// functional concents:                                                  //
+		// https://drboolean.gitbooks.io/mostly-adequate-guide/content/ch10.html //
+		///////////////////////////////////////////////////////////////////////////
+
+
+		/////////////
+		// Helpers //
+		/////////////
+		var liftA2 = _.curry(function(f, functor1, functor2) {
+		  return functor1.map(f).ap(functor2);
+		});
 
 		var returnLargestByCount = _.curry((a, b) => {
 		  if (a.count < b.count) {
@@ -39,12 +50,32 @@ require([
 		  
 		  return 0;
 		});
+		
+		var countLens = _.lensProp('count');
 
-		var formatNumber = _.compose(String.prototype.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"), toString);
+		var formatNumber = _.compose(_.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"), _.toString);
 
 		function retrieveResultsFailure(err) {
 			console.error(err);
 		}
+
+
+		// EVT.on('renderItemsToLeaderboard', renderItemsToLeaderboard);
+		// EVT.on('retrieveResultsFailure', retrieveResultsFailure);
+
+		//////////
+		// Pure //
+		//////////
+
+		var success = 
+			_.compose(
+				_.map(console.log.bind(console)), 
+				_.map(
+					_.over(countLens, formatNumber)
+				), 
+				_.slice(0,5),
+				_.sort(returnLargestByCount)
+			);
 
 		////////////
 		// Impure //
@@ -58,27 +89,21 @@ require([
 				poller.poll({type: config.type, limit: config.limit}, result).fail(reject);
 			});
 		};
-
-		/*Task.of(_.concat)
+		/*
+		// Naive solution
+		 Task.of(_.concat)
 			.ap(httpRequest({type: 'veggies', limit: 10}))
 			.ap(httpRequest({type: 'fruits', limit: 10}))
-			.fork(console.log.bind(console), console.log.bind(console));*/
-
-			var liftA2 = _.curry(function(f, functor1, functor2) {
-			  return functor1.map(f).ap(functor2);
-			});
-
-			var liftA3 = _.curry(function(f, functor1, functor2, functor3) {
-			  return functor1.map(f).ap(functor2).ap(functor3);
-			});
-
-			
-			liftA2(
-				_.concat, 
-				httpRequest({type: 'veggies', limit: 10}), 
-				httpRequest({type: 'fruits', limit: 10})
-			)
 			.fork(console.log.bind(console), console.log.bind(console));
+		*/
+	
+		liftA2(
+			_.concat, 
+			httpRequest({type: 'veggies', limit: 10}), 
+			httpRequest({type: 'fruits', limit: 10})
+		)
+		.fork(retrieveResultsFailure, success);
+
 
 		/*(function getResults() {
 			$.when(
