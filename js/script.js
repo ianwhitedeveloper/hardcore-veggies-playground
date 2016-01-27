@@ -1,6 +1,7 @@
 requirejs.config({
   paths: {
     ramda: 'https://cdnjs.cloudflare.com/ajax/libs/ramda/0.13.0/ramda.min',
+    Task: './js/data.task.umd',
     jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min',
     mustache: 'https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache',
     EventEmitter2: 'js/eventemitter2',
@@ -10,23 +11,25 @@ requirejs.config({
 
 require([
     'ramda',
+    'Task',
     'jquery',
     'mustache',
     'EventEmitter2',
     'spredfast'
   ],
-  function (_, $, Mustache, EventEmitter2, spredfast) {
+  function (_, Task, $, Mustache, EventEmitter2, spredfast) {
   	
 		var poller = new spredfast.Poller(),
 				EVT = new EventEmitter2(),
 				template = document.getElementById('template').innerHTML,
 				leaderboardListElement = $('[rel="js_produce_leaderboard_list"]');
+
 		Mustache.parse(template);
 
-		EVT.on('renderItemsToLeaderboard', renderItemsToLeaderboard);
-		EVT.on('retrieveResultsFailure', retrieveResultsFailure);
+		// EVT.on('renderItemsToLeaderboard', renderItemsToLeaderboard);
+		// EVT.on('retrieveResultsFailure', retrieveResultsFailure);
 
-		function returnLargestByCount(a,b) {
+		var returnLargestByCount = _.curry((a, b) => {
 		  if (a.count < b.count) {
 		    return 1;
 		  }
@@ -35,22 +38,33 @@ require([
 		  }
 		  
 		  return 0;
-		}
+		});
 
-		function formatNumber(num) {
-			return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-		}
-
-		function renderItemsToLeaderboard(items) {
-			var data = { 'items' : items};
-			leaderboardListElement.html(Mustache.render(template, data));
-		}
+		var formatNumber = _.compose(String.prototype.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"), toString);
 
 		function retrieveResultsFailure(err) {
 			console.error(err);
 		}
 
-		(function getResults() {
+		////////////
+		// Impure //
+		////////////
+		var renderItemsToLeaderboard = _.curry((el, template, data) => {
+			el.html(Mustache.render(template, { 'items' : data}));
+		});
+
+		var httpRequest = function (config) {
+			return new Task((reject, result) => {
+				poller.poll({type: config.type, limit: config.limit}, result).fail(reject);
+			});
+		};
+
+		Task.of(_.concat)
+			.ap(httpRequest({type: 'veggies', limit: 10}))
+			.ap(httpRequest({type: 'fruits', limit: 10}))
+			.fork(console.log.bind(console), console.log.bind(console));
+
+		/*(function getResults() {
 			$.when(
 					poller.poll({type: 'veggies', limit: 10}),
 					poller.poll({type: 'fruits', limit: 10})
@@ -72,7 +86,7 @@ require([
 				});
 			
 			// setTimeout(getResults, 15000);
-		})();
+		})();*/
     /*////////////////////////////////////////////
     // Utils
     //
