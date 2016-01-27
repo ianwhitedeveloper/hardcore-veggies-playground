@@ -1,4 +1,10 @@
-(function($) {
+requirejs.config({
+  paths: {
+    jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min'
+  }
+});
+
+define(["jquery"], function($) {
 
   var Poller = function () {
     this.defaults = {
@@ -73,9 +79,7 @@
     return dfd;
   };
 
-  if (window.spredfast == null) {
-    window.spredfast = {
-      Poller: Poller
-    };
-  }
-}(jQuery));
+  return {
+    Poller: Poller
+  };
+});
