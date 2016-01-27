@@ -90,11 +90,14 @@ require([
 			.fork(retrieveResultsFailure, success);
 		*/
 	
-		liftA2(
-			_.concat, 
-			httpRequest({type: 'veggies'}), 
-			httpRequest({type: 'fruits'})
-		)
-		.fork(retrieveResultsFailure, success);
+		(function getResults() {
+			liftA2(
+				_.concat, 
+				httpRequest({type: 'veggies'}), 
+				httpRequest({type: 'fruits'})
+			)
+			.fork(retrieveResultsFailure, success);
 
+			setTimeout(getResults, 15000);
+		})();
   });
