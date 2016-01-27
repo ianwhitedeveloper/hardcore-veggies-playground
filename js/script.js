@@ -30,9 +30,9 @@ require([
 		///////////////////////////////////////////////////////////////////////////
 
 
-		/////////////
-		// Helpers //
-		/////////////
+		//////////////////
+		// Pure Helpers //
+		//////////////////
 		var liftA2 = _.curry(function(f, functor1, functor2) {
 		  return functor1.map(f).ap(functor2);
 		});
@@ -48,15 +48,8 @@ require([
 		  return 0;
 		});
 
-		function retrieveResultsFailure(err) {
+		var retrieveResultsFailure _.curry((err) => {
 			console.error(err);
-		}
-
-		//////////
-		// Pure //
-		//////////
-		var renderItemsToLeaderboard = _.curry((data) => {
-			leaderboardListElement.html(Mustache.render(template, { 'items' : data}));
 		});
 
 		var countLens = _.lensProp('count');
@@ -66,6 +59,9 @@ require([
 		////////////
 		// Impure //
 		////////////
+		var renderItemsToLeaderboard = _.curry((data) => {
+			leaderboardListElement.html(Mustache.render(template, { 'items' : data}));
+		});
 
 		var success = 
 			_.compose(
