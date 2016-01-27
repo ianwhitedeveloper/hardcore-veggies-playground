@@ -92,8 +92,8 @@ require([
 	
 		liftA2(
 			_.concat, 
-			httpRequest({type: 'veggies', limit: 10}), 
-			httpRequest({type: 'fruits', limit: 10})
+			httpRequest({type: 'veggies'}), 
+			httpRequest({type: 'fruits'})
 		)
 		.fork(retrieveResultsFailure, success);
 
