@@ -48,7 +48,7 @@ require([
 		  return 0;
 		});
 
-		var retrieveResultsFailure _.curry((err) => {
+		var retrieveResultsFailure = _.curry((err) => {
 			console.error(err);
 		});
 
