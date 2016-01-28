@@ -55,7 +55,7 @@ $(document).ready(function() {
 					EVT.emit('retrieveResultsFailure', err);
 				});
 			
-			// setTimeout(getResults, 15000);
+			setTimeout(getResults, 15000);
 		})();
 	})();
 });
