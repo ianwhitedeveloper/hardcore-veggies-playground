@@ -19,7 +19,8 @@ require([
   	
 		var poller = new spredfast.Poller(),
 				template = document.getElementById('template').innerHTML,
-				leaderboardListElement = $('[rel="js_produce_leaderboard_list"]');
+				leaderboardListElement = $('[rel="js_produce_leaderboard_list"]'),
+				defaultLeaderboardCount = 5;
 
 		Mustache.parse(template);
 
@@ -69,7 +70,7 @@ require([
 				_.map(
 					_.over(countLens, formatNumber)
 				), 
-				_.slice(0,5),
+				_.take(defaultLeaderboardCount),
 				_.sort(returnLargestByCount)
 			);
 
