@@ -11,7 +11,7 @@
     <base target="_blank" />
 
     <!-- CSS -->
-    <link href="./css/style.css" rel="stylesheet" />
+    <link href="../css/style.css" rel="stylesheet" />
 
   </head>
   <body>
@@ -41,9 +41,11 @@
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.js"></script>
-    <script src="js/eventemitter2.js"></script>
-    <script src="./js/api.js"></script>
-    <script src="./js/script.js"></script>
+    <script src="../js/eventemitter2.js"></script>
+    <script src="js/npo.js"></script>
+    <script src="js/asq.bundle.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="js/script.js"></script>
 
     <script id="template" type="x-tmpl-mustache">
       {{#items}}
@@ -54,6 +56,13 @@
         <h4>Mentions</h4>
       </li>
       {{/items}}
+      {{#error}}
+      <li class="leaderboard__listItem fade-in" rel="leaderboard__listItem_isActive">
+        <div class="error">
+          <p>Uh oh! {{error}}!</p>
+        </div>
+      </li>
+      {{/error}}
     </script>
 
   </body>
