@@ -21,6 +21,11 @@ body {
 .leaderboard h4 {
   font-size: 14px;
 }
+.error {
+  width: 100%;
+  color: #f60;
+  text-align: center;
+}
 .layout_constrained {
   max-width: 768px;
   margin: 0 auto;
