@@ -1,3 +1,6 @@
+'use strict';
+
+
 $(document).ready(function() {
 	(function() {
 		var Observable = Rx.Observable,

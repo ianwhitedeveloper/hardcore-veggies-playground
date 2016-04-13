@@ -1,3 +1,5 @@
+'use strict';
+
 requirejs.config({
   paths: {
     ramda: 'https://cdnjs.cloudflare.com/ajax/libs/ramda/0.16.0/ramda.min',
