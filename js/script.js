@@ -31,7 +31,8 @@ $(document).ready(function() {
 		}
 
 		function retrieveResultsFailure(err) {
-			var data = { 'error' : err};
+			console.warn(err);
+			var data = { 'error' : 'There was an error, please try again later.'};
 			leaderboardListElement.html(Mustache.render(template, data));
 		}
 
@@ -50,7 +51,7 @@ $(document).ready(function() {
 				.concat(results.fruits)
 				.sort(returnLargestByCount)
 				.slice(0, 5)
-				.map(function(el) {
+				.map((el) => {
 					return {"name": el.name, "count": formatNumber(el.count)};
 				});
 
@@ -59,10 +60,10 @@ $(document).ready(function() {
 
 		(function getResults() {
 			ASQ()
-			.runner(function* (){
+			.runner(function *resultsGenerator (){
 				  var ve = yield getStats('fruits', 10);
 				  var fr = yield getStats('veggies', 10);
-				  yield {veggies: ve, fruits: fr};
+				  yield {veggiecds: ve, fruits: fr};
 			})
 			.val(output)
 			.or(function(err) {

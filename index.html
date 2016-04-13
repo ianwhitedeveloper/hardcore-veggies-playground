@@ -57,7 +57,11 @@
       </li>
       {{/items}}
       {{#error}}
-        <h1 class="error">Uh oh! {{error}}!
+      <li class="leaderboard__listItem fade-in" rel="leaderboard__listItem_isActive">
+        <div class="error">
+          <p>Uh oh! {{error}}!</p>
+        </div>
+      </li>
       {{/error}}
     </script>
 
