@@ -1,0 +1,15 @@
+{
+  "name": "functional-solution",
+  "version": "1.0.0",
+  "description": "Functional solution to front end dev challenge",
+  "main": "server.js",
+  "dependencies": {
+    "path": "^0.12.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Ian White",
+  "license": "ISC"
+}
