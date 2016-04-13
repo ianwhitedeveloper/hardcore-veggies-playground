@@ -31,29 +31,43 @@ $(document).ready(function() {
 		}
 
 		function retrieveResultsFailure(err) {
-			console.error(err);
+			var data = { 'error' : err};
+			leaderboardListElement.html(Mustache.render(template, data));
+		}
+
+		var getStats = function(type, limit) {
+			return ASQ(function(done) {
+				poller.poll({type: type, limit: limit}, done);
+			});
+		};
+
+		function output(results) {
+			if (! results.fruits || !results.veggies)
+				throw "Please provide the expected object: {veggies: [...], fruits: [...]}";
+
+			var items = 
+				results.veggies
+				.concat(results.fruits)
+				.sort(returnLargestByCount)
+				.slice(0, 5)
+				.map(function(el) {
+					return {"name": el.name, "count": formatNumber(el.count)};
+				});
+
+			EVT.emit('renderItemsToLeaderboard', items);
 		}
 
 		(function getResults() {
-			$.when(
-					poller.poll({type: 'veggies', limit: 10}),
-					poller.poll({type: 'fruits', limit: 10})
-				)
-				.done(function(veggies, fruits) {
-					var items = 
-						veggies
-						.concat(fruits)
-						.sort(returnLargestByCount)
-						.slice(0, 5)
-						.map(function(el) {
-							return {"name": el.name, "count": formatNumber(el.count)};
-						});
-
-					EVT.emit('renderItemsToLeaderboard', items);
-				})
-				.fail(function(err) {
-					EVT.emit('retrieveResultsFailure', err);
-				});
+			ASQ()
+			.runner(function* (){
+				  var ve = yield getStats('fruits', 10);
+				  var fr = yield getStats('veggies', 10);
+				  yield {veggies: ve, fruits: fr};
+			})
+			.val(output)
+			.or(function(err) {
+				EVT.emit('retrieveResultsFailure', err);
+			});
 			
 			setTimeout(getResults, 15000);
 		})();
