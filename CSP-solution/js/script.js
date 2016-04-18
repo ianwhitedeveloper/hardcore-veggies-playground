@@ -19,7 +19,7 @@ $(document).ready(function() {
 
 		(function pollAPI() {
 			ASQ().runner(
-				Ac.go(function *processA(mainCh){
+				Ac.go(function *resultsProcess(mainCh){
 					while (true) {
 				        var results = yield Ac.take( mainCh );
 				        output(results);
