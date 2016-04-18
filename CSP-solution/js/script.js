@@ -26,7 +26,7 @@ $(document).ready(function() {
 					}
 			    }),
 
-			    Ac.go(function *fruits(mainCh){
+			    Ac.go(function *generateStats(mainCh){
 			    	var fruits = yield getStats('fruits', 10);
 			    	var veggies = yield getStats('veggies', 10);
 			        
